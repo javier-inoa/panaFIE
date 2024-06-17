@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 
 @Data @NoArgsConstructor @AllArgsConstructor @Entity
 @Table(name = "notification")
-public class notification {
+public class Notification {
     
     @Id @GeneratedValue
     private Long id;
