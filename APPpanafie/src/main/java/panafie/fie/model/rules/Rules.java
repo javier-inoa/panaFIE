@@ -1,8 +1,7 @@
 package panafie.fie.model.rules;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,19 +13,22 @@ import panafie.fie.model.pasanaku.Pasanaku;
 @AllArgsConstructor
 public class Rules {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
+    @OneToOne
+    @JoinColumn(name = "pasanaku_id")
     private Pasanaku pasanakuId;
-    
+
     private Integer amountOfPeople;
-    
+
     private Float amount;
-    
+
     private String description;
-    
+
     private String duration;
-    
+
     private Boolean typeOfDraw;
     
 }

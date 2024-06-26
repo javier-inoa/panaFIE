@@ -4,30 +4,22 @@
  */
 package panafie.fie.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import panafie.fie.model.datepasanaku.DatePasanaku;
-import panafie.fie.model.rules.Rules;
+import lombok.*;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+import java.util.Date;
+
+@Getter @Setter
 public class PasanakuDTO {
+    private Long id;
     private String name;
-    
     private String description;
-    
-    private Rules amountOfPeople;
-    
-    private Rules amount;
-    
-    private Rules duration;
-    
-    private Rules typeOfDraw;
-    
-    private DatePasanaku startDate;
-    
-    private DatePasanaku finishDate;
-    
+    private Long userId;
+    private Long dateId;
+    private Long rulesId;
+    private Date startDate;
+    private Date finishDate;
+    private Integer amountOfPeople;
+    private Float amount;
+    private String duration;
+    private Boolean typeOfDraw;
 }
