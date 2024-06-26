@@ -1,19 +1,18 @@
 package panafie.fie.model.pay;
 
-import java.util.Date;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 import panafie.fie.model.user.User;
 
 @Entity
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class Pay {
 
     @Id
@@ -21,9 +20,25 @@ public class Pay {
     private Long id;
     
     @ManyToOne
+    @NotNull
     private User userId;
     
-    private Float amount;
+    @NotNull
+    @Positive
+    private BigDecimal amount;
     
-    private Date date;
+    @NotNull
+    private LocalDate paymentDate;
+    
+    @Size(max = 255)
+    private String description;
+    
+    public Pay() {
+        // Constructor vacío requerido por JPA
+        
+        
+    }
+
+    // Getters y setters
+    // Métodos adicionales según sea necesario
 }
