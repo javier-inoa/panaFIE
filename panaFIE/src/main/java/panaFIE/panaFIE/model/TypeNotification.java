@@ -15,13 +15,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class TypeNotification {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     private Long id;
-    
+
     @NotNull
     @Size(min = 1, max = 50)
     private String name;
-    
+
     @NotNull
     @Size(min = 1, max = 250)
     private String description;

@@ -36,8 +36,8 @@ public class User {
     private String lastName;
 
     @NotNull
-    @Min(0)
-    @Max(2)
+    @Min(1)
+    @Max(3)
     private Integer state;
 
     @NotNull
@@ -45,6 +45,6 @@ public class User {
     private String email;
 
     @NotNull
-    @Size(min = 8, max = 255)
+    @Size(min = 8, max = 25)
     private String password;
 }
