@@ -4,6 +4,7 @@ import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,8 +21,10 @@ public class DatePasanaku {
     private Long id;
 
     @NotNull
+    @Future
     private Date startDate;
 
     @NotNull
+    @Future
     private Date finishDate;
 }

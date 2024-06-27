@@ -4,7 +4,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,17 +28,23 @@ public class User {
     private Role roleId;
 
     @NotNull
+    @Size(min = 1, max = 50)
     private String name;
 
     @NotNull
+    @Size(min = 1, max = 50)
     private String lastName;
 
     @NotNull
+    @Min(0)
+    @Max(2)
     private Integer state;
 
     @NotNull
+    @Email
     private String email;
 
     @NotNull
+    @Size(min = 8, max = 255)
     private String password;
 }
