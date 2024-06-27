@@ -10,16 +10,31 @@ import java.util.Date;
 
 @Getter @Setter
 public class PasanakuDTO {
+    
     private Long id;
+    
     private String name;
+    
     private String description;
+    
+    private Boolean state;
+    
     private Long userId;
+    
     private Long dateId;
+    
     private Long rulesId;
+    
     private Date startDate;
+    
     private Date finishDate;
+    
     private Integer amountOfPeople;
+    
     private Float amount;
+    
     private String duration;
-    private Boolean typeOfDraw;
+    
+    private String typeOfDraw;
+   
 }

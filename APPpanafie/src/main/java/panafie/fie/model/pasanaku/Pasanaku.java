@@ -34,4 +34,6 @@ public class Pasanaku {
     private String name;
 
     private String description;
+    
+    private Boolean state;
 }

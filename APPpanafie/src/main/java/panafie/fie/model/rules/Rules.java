@@ -17,10 +17,6 @@ public class Rules {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "pasanaku_id")
-    private Pasanaku pasanakuId;
-
     private Integer amountOfPeople;
 
     private Float amount;
@@ -29,6 +25,6 @@ public class Rules {
 
     private String duration;
 
-    private Boolean typeOfDraw;
+    private String typeOfDraw;
     
 }
