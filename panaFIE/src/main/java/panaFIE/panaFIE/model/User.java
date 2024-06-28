@@ -2,7 +2,9 @@ package panaFIE.panaFIE.model;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Max;
@@ -20,11 +22,12 @@ import lombok.NoArgsConstructor;
 public class User {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
     @ManyToOne
+    @JoinColumn(name= "role_id")
     private Role roleId;
 
     @NotNull
@@ -33,6 +36,7 @@ public class User {
 
     @NotNull
     @Size(min = 1, max = 50)
+    @JoinColumn(name= "last_name")
     private String lastName;
 
     @NotNull
