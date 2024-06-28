@@ -1,16 +1,14 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package panafie.fie.dto;
 
-import lombok.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Date;
-import com.fasterxml.jackson.annotation.JsonFormat;
+
 
 @Getter @Setter
-public class PasanakuDTO {
+public class CreatePasanakuDTO {
 
     private Long id;
 
@@ -19,6 +17,12 @@ public class PasanakuDTO {
     private String description;
 
     private Boolean state;
+
+    private Long userId;
+
+    private Long dateId;
+
+    private Long rulesId;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private Date startDate;
@@ -33,5 +37,4 @@ public class PasanakuDTO {
     private String duration;
 
     private String typeOfDraw;
-   
 }

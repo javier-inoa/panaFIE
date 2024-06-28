@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import panafie.fie.model.datepasanaku.DatePasanaku;
-import panafie.fie.model.rules.Rules;
+import panafie.fie.model.rules.Rule;
 import panafie.fie.model.user.User;
 
 @Entity
@@ -24,8 +24,8 @@ public class Pasanaku {
     private User userId;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "rules_id")
-    private Rules rules;
+    @JoinColumn(name = "rule_id")
+    private Rule ruleId;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "date_id")

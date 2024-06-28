@@ -4,6 +4,10 @@
  */
 package panafie.fie.controller;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
+import java.util.Map;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -12,11 +16,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import panafie.fie.dto.CreatePasanakuDTO;
 import panafie.fie.dto.PasanakuDTO;
 import panafie.fie.dto.PasanakuDTOConverter;
 import panafie.fie.model.datepasanaku.DatePasanaku;
 import panafie.fie.model.pasanaku.Pasanaku;
-import panafie.fie.model.rules.Rules;
+import panafie.fie.model.rules.Rule;
 import panafie.fie.repository.DatePasanakuRepository;
 import panafie.fie.repository.PasanakuRepository;
 import panafie.fie.repository.RuleRepository;
@@ -33,6 +38,7 @@ public class PasanakuController {
     private final RuleRepository rulesRepository;
     private final PasanakuDTOConverter pasanakuDTOConverter;
 
+    //HU # GP-02 LISTAR PASANAKUS
     @GetMapping("/pasanakus")
     public ResponseEntity<?> getPasanakus() {
         List<Pasanaku> result = pasanakuRepository.findAll();
@@ -47,6 +53,7 @@ public class PasanakuController {
         }
     }
 
+    //HU # GP-02 LISTAR PASANAKUS FILTRADO
     @GetMapping("/pasanakus/{id}")
     public ResponseEntity<?> getOnePasanaku(@PathVariable Long id) {
         Pasanaku result = pasanakuRepository.findById(id).orElse(null);
@@ -58,54 +65,85 @@ public class PasanakuController {
         }
     }
 
+    //HU # GP-01 CREAR PASANAKUS
     @PostMapping("/pasanaku")
-    public ResponseEntity<?> createPasanaku(@RequestBody PasanakuDTO pasanakuDTO) {
+    public ResponseEntity<?> createPasanaku(@RequestBody CreatePasanakuDTO pasanakuDTO) {
         DatePasanaku datePasanaku = new DatePasanaku();
         datePasanaku.setStartDate(pasanakuDTO.getStartDate());
         datePasanaku.setFinishDate(pasanakuDTO.getFinishDate());
         DatePasanaku savedDatePasanaku = datePasanakuRepository.save(datePasanaku);
 
-        Rules rules = new Rules();
-        rules.setAmountOfPeople(pasanakuDTO.getAmountOfPeople());
-        rules.setAmount(pasanakuDTO.getAmount());
-        rules.setDuration(pasanakuDTO.getDuration());
-        rules.setTypeOfDraw(pasanakuDTO.getTypeOfDraw());
-        Rules savedRules = rulesRepository.save(rules);
+        Rule rule = new Rule();
+        rule.setAmountOfPeople(pasanakuDTO.getAmountOfPeople());
+        rule.setAmount(pasanakuDTO.getAmount());
+        rule.setDuration(pasanakuDTO.getDuration());
+        rule.setTypeOfDraw(pasanakuDTO.getTypeOfDraw());
+        Rule savedRule = rulesRepository.save(rule);
 
         Pasanaku pasanaku = new Pasanaku();
         pasanaku.setName(pasanakuDTO.getName());
         pasanaku.setDescription(pasanakuDTO.getDescription());
         pasanaku.setState(pasanakuDTO.getState());
         pasanaku.setUserId(null);
+        pasanaku.setRuleId(savedRule);
         pasanaku.setDateId(savedDatePasanaku);
-        pasanaku.setRules(savedRules);
-        Pasanaku savedPasanaku = pasanakuRepository.save(pasanaku);
-
-        pasanakuDTO.setId(savedPasanaku.getId());
-        pasanakuDTO.setDateId(savedDatePasanaku.getId());
-        pasanakuDTO.setRulesId(savedRules.getId());
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(pasanakuDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(pasanakuRepository.save(pasanaku));
     }
 
-    @PutMapping("/pasaku/{id}")
-    public ResponseEntity<?> updatePasanaku(@RequestBody Pasanaku edit, @PathVariable Long id) {
-        return pasanakuRepository.findById(id).map(p -> {
-            p.setName(edit.getName());
-            p.setDescription(edit.getDescription());
-            return ResponseEntity.ok(pasanakuRepository.save(p));
-        }).orElseGet(() -> {
-            return ResponseEntity.notFound().build();
-        });
+    //HU # GP-04 DAR DE BAJA PASANAKUS
+    @PostMapping("/statepasanaku/{id}")
+    public ResponseEntity<?> updateStatePasanaku(@RequestBody Map<String, Boolean> requestBody, @PathVariable Long id) {
+        Boolean state = requestBody.get("state");
+        if (state == null) {
+            return ResponseEntity.badRequest().body("State parameter is required.");
+        }
+
+        return pasanakuRepository.findById(id).map(pasanaku -> {
+            Date startDate = pasanaku.getDateId().getStartDate();
+
+            LocalDate startLocalDate = startDate.toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
+
+            LocalDate currentDate = LocalDate.now();
+
+            if (currentDate.isBefore(startLocalDate)) {
+                pasanaku.setState(state);
+                return ResponseEntity.ok(pasanakuRepository.save(pasanaku));
+            } else {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body("No se puede actualizar el estado. El pasanaku ya ha iniciado.");
+            }
+        }).orElse(ResponseEntity.notFound().build()); // Manejar caso donde no se encuentra el Pasanaku
     }
-    
-    @PutMapping("/statepasaku/{id}")
-    public ResponseEntity<?> updateStatePasanaku(@RequestBody Pasanaku edit, @PathVariable Long id) {
-        return pasanakuRepository.findById(id).map(p -> {
-            p.setState(edit.getState());
-            return ResponseEntity.ok(pasanakuRepository.save(p));
-        }).orElseGet(() -> {
-            return ResponseEntity.notFound().build();
-        });
+
+    //HU # GP-05 EDITAR PASANAKUS
+    @PostMapping("/updatepasanaku/{id}")
+    public ResponseEntity<?> updatePasanaku(@RequestBody CreatePasanakuDTO pasanakuDTO, @PathVariable Long id) {
+        return pasanakuRepository.findById(id).map(existingPasanaku -> {
+            Date startDate = existingPasanaku.getDateId().getStartDate();
+            LocalDate startLocalDate = startDate.toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
+            LocalDate currentDate = LocalDate.now();
+
+            if (currentDate.isBefore(startLocalDate)) {
+                existingPasanaku.setName(pasanakuDTO.getName());
+                existingPasanaku.setDescription(pasanakuDTO.getDescription());
+
+                Rule rule = existingPasanaku.getRuleId();
+                rule.setAmountOfPeople(pasanakuDTO.getAmountOfPeople());
+                rule.setAmount(pasanakuDTO.getAmount());
+                rule.setDuration(pasanakuDTO.getDuration());
+                rule.setTypeOfDraw(pasanakuDTO.getTypeOfDraw());
+
+                existingPasanaku.setRuleId(rulesRepository.save(rule));
+                return ResponseEntity.ok(pasanakuRepository.save(existingPasanaku));
+            } else {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body("No se puede actualizar el Pasanaku. Ya inicio.");
+            }
+        }).orElse(ResponseEntity.notFound().build());
     }
+
 }

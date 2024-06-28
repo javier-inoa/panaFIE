@@ -5,12 +5,12 @@
 package panafie.fie.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import panafie.fie.model.rules.Rules;
+import panafie.fie.model.rules.Rule;
 
 /**
  *
  * @author alejandro.reyes
  */
-public interface RuleRepository extends JpaRepository<Rules, Long>{
+public interface RuleRepository extends JpaRepository<Rule, Long>{
     
 }

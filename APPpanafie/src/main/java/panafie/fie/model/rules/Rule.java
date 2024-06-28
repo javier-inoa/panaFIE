@@ -5,13 +5,12 @@ import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import panafie.fie.model.pasanaku.Pasanaku;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Rules {
+public class Rule {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,8 +19,6 @@ public class Rules {
     private Integer amountOfPeople;
 
     private Float amount;
-
-    private String description;
 
     private String duration;
 
