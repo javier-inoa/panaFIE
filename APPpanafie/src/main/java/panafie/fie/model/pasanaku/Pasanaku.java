@@ -16,7 +16,8 @@ import panafie.fie.model.user.User;
 @AllArgsConstructor
 public class Pasanaku {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     private Long id;
     
     @ManyToOne
@@ -29,3 +30,4 @@ public class Pasanaku {
     
     private String description;
 }
+
