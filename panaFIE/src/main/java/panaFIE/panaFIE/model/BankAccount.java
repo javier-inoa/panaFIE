@@ -36,9 +36,4 @@ public class BankAccount {
     @NotNull
     @Size(min = 2, max = 50)
     private String bank;
-
-    @NotNull
-    @Min(0)
-    @Positive
-    private Double balance;
 }

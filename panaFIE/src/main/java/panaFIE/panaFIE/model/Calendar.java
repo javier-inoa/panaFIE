@@ -36,10 +36,12 @@ public class Calendar {
 
     @NotNull
     @Future
+    @JoinColumn(name = "payment_date")
     private Date paymentDate;
 
     @NotNull
     @Future
+    @JoinColumn(name = "maximum_payment_date")
     private Date maximumPaymentDate;
 
     @NotNull

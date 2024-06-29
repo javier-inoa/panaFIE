@@ -7,6 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -44,6 +45,14 @@ public class Pasanaku {
     @NotNull
     @Size(min = 1, max = 250)
     private String description;
+    
+    @NotNull
+    @JoinColumn(name = "account_number")
+    private Integer accountNumber;
+    
+    @NotNull
+    @Positive
+    private Integer balance;
     
     @NotNull
     private Boolean status;

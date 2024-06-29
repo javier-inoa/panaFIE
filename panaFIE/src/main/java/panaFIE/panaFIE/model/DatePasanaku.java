@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -23,9 +24,11 @@ public class DatePasanaku {
 
     @NotNull
     @Future
+    @JoinColumn(name = "start_date")
     private Date startDate;
 
     @NotNull
     @Future
+    @JoinColumn(name = "finish_date")
     private Date finishDate;
 }
