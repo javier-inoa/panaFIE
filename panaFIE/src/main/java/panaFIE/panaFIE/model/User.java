@@ -42,7 +42,7 @@ public class User {
     @NotNull
     @Min(1)
     @Max(3)
-    private Integer state;
+    private Integer status;
 
     @NotNull
     @Email

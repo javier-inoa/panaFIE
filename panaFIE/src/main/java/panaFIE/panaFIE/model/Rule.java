@@ -1,10 +1,9 @@
 package panaFIE.panaFIE.model;
 
-import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
@@ -20,12 +19,8 @@ import lombok.NoArgsConstructor;
 public class Rule {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
-    
-    @NotNull
-    @ManyToOne
-    private Pasanaku pasanakuId;
     
     @NotNull
     @Positive
@@ -35,6 +30,10 @@ public class Rule {
     @NotNull
     @Positive
     private Double amount;
+    
+    @NotNull
+    @Positive
+    private Double totalAmount;
     
     @NotNull
     @Size(min = 1, max = 1000)
