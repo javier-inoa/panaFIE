@@ -8,6 +8,8 @@ import panafie.fie.model.pay.Pay;
 import panafie.fie.model.user.User;
 import panafie.fie.repository.PaymentRepository;
 import panafie.fie.repository.UserRepository;
+
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,11 +23,17 @@ public class PaymentController {
     @Autowired
     private UserRepository userRepository;
 
-    // Create
-    @PostMapping("/register")
-    public ResponseEntity<String> registerPayment(@RequestBody PayDTO payDTO) {
+    // Historia # GCO-07 - Pago de cuota
+    // Realización del pago de cuota
+    @PostMapping("/make-payment")
+    public ResponseEntity<String> makePayment(@RequestBody PayDTO payDTO) {
         User user = userRepository.findById(payDTO.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        // Lógica para verificar fondos insuficientes o permiso
+        if (/* lógica para verificar saldo o permiso */ false) {
+            return ResponseEntity.status(400).body("Error: Fondos insuficientes o falta de permiso");
+        }
 
         Pay pay = new Pay();
         pay.setUserId(user);
@@ -34,48 +42,51 @@ public class PaymentController {
 
         payRepository.save(pay);
 
-        return ResponseEntity.ok("Payment registered successfully");
+        return ResponseEntity.ok("El pago fue procesado correctamente para el usuario: " +
+                user.getNombre() + " " + user.getApellido() + ", Monto: " + pay.getAmount());
     }
 
-    @GetMapping
-    public List<Pay> getAllPayments() {
-        return payRepository.findAll();
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Pay> getPaymentById(@PathVariable Long id) {
-        Optional<Pay> pay = payRepository.findById(id);
-        return pay.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<String> updatePayment(@PathVariable Long id, @RequestBody PayDTO payDTO) {
-        Optional<Pay> optionalPay = payRepository.findById(id);
-        if (optionalPay.isPresent()) {
-            Pay pay = optionalPay.get();
-            User user = userRepository.findById(payDTO.getUserId())
-                    .orElseThrow(() -> new RuntimeException("User not found"));
-
-            pay.setUserId(user);
-            pay.setAmount(payDTO.getAmount());
-            pay.setDate(payDTO.getDate());
-            payRepository.save(pay);
-
-            return ResponseEntity.ok("Payment updated successfully");
+    // Historia # GCO-07 - Pago de cuota
+    // Selección de cuenta
+    @GetMapping("/accounts/{userId}")
+    public ResponseEntity<List<String>> getUserAccounts(@PathVariable Long userId) {
+        Optional<User> user = userRepository.findById(userId);
+        if (user.isPresent()) {
+            List<String> accounts = List.of("Cuenta de Ahorros", "Cuenta Corriente");
+            return ResponseEntity.ok(accounts);
         } else {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(404).body(null);
         }
     }
 
+    // Historia # GCO-07 - Pago de cuota
+    // Confirmar el pago
+    @PostMapping("/confirm-payment")
+    public ResponseEntity<String> confirmPayment(@RequestBody PayDTO payDTO) {
+        return ResponseEntity.ok("El pago se realizó correctamente para el usuario: " +
+                payDTO.getUserId() + ", Monto: " + payDTO.getAmount());
+    }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deletePayment(@PathVariable Long id) {
-        if (payRepository.existsById(id)) {
-            payRepository.deleteById(id);
-            return ResponseEntity.ok("Payment deleted successfully");
-        } else {
-            return ResponseEntity.notFound().build();
+    // Historia # GCO-02 - Supervisación de actividades
+    // Supervisar pagos de jugadores
+    @GetMapping("/supervise")
+    public ResponseEntity<List<Pay>> supervisePayments(@RequestParam String filter) {
+        List<Pay> payments;
+        switch (filter) {
+            case "incomplete":
+                payments = payRepository.findByIncompletePayments();
+                break;
+            case "overdue":
+                payments = payRepository.findByDateBefore(new Date());
+                break;
+            case "all":
+            default:
+                payments = payRepository.findAll();
+                break;
         }
+        if (payments.isEmpty()) {
+            return ResponseEntity.status(404).body(null);
+        }
+        return ResponseEntity.ok(payments);
     }
 }
-
