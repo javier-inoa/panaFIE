@@ -1,5 +1,6 @@
 package panaFIE.panaFIE.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -36,7 +37,7 @@ public class User {
 
     @NotNull
     @Size(min = 1, max = 50)
-    @JoinColumn(name= "last_name")
+    @Column(name= "last_name")
     private String lastName;
 
     @NotNull

@@ -26,7 +26,7 @@ insert into user (role_id, name, last_name, status, email, password) values
 (2, 'jane', 'doe', 1, 'jane.doe@example.com', 'password123'),
 (2, 'alice', 'smith', 1, 'alice.smith@example.com', 'password123'),
 (2, 'bob', 'smith', 1, 'bob.smith@example.com', 'password123'),
-(3, 'charlie', 'brown', 1, 'charlie.brown@example.com', 'password123'),
+(3, 'charlie', 'brown', 3, 'charlie.brown@example.com', 'password123'),
 (3, 'diana', 'prince', 1, 'diana.prince@example.com', 'password123'),
 (3, 'eve', 'johnson', 1, 'eve.johnson@example.com', 'password123'),
 (3, 'frank', 'wright', 1, 'frank.wright@example.com', 'password123'),
