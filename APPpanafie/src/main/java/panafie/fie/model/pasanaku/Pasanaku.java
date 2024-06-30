@@ -36,4 +36,7 @@ public class Pasanaku {
     private String description;
     
     private Boolean state;
+
+    @Column(name = "game_started")
+    private Boolean gameStarted;
 }

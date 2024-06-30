@@ -18,6 +18,8 @@ public class CreatePasanakuDTO {
 
     private Boolean state;
 
+    private Boolean gameStarted;
+
     private Long userId;
 
     private Long dateId;

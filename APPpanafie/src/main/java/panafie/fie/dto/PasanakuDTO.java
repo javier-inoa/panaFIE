@@ -20,6 +20,8 @@ public class PasanakuDTO {
 
     private Boolean state;
 
+    private Boolean gameStarted;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private Date startDate;
 

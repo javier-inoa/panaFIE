@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package panafie.fie.controller;
 
 import java.time.LocalDate;
@@ -38,33 +34,6 @@ public class PasanakuController {
     private final RuleRepository rulesRepository;
     private final PasanakuDTOConverter pasanakuDTOConverter;
 
-    //HU # GP-02 LISTAR PASANAKUS
-    @GetMapping("/pasanakus")
-    public ResponseEntity<?> getPasanakus() {
-        List<Pasanaku> result = pasanakuRepository.findAll();
-
-        if (result.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        } else {
-            List<PasanakuDTO> dtoList = result.stream().map(pasanakuDTOConverter::convertToDto)
-                    .collect(Collectors.toList());
-
-            return ResponseEntity.ok(dtoList);
-        }
-    }
-
-    //HU # GP-02 LISTAR PASANAKUS FILTRADO
-    @GetMapping("/pasanakus/{id}")
-    public ResponseEntity<?> getOnePasanaku(@PathVariable Long id) {
-        Pasanaku result = pasanakuRepository.findById(id).orElse(null);
-
-        if (result == null) {
-            return ResponseEntity.notFound().build();
-        } else {
-            return ResponseEntity.ok(result);
-        }
-    }
-
     //HU # GP-01 CREAR PASANAKUS
     @PostMapping("/pasanaku")
     public ResponseEntity<?> createPasanaku(@RequestBody CreatePasanakuDTO pasanakuDTO) {
@@ -84,11 +53,39 @@ public class PasanakuController {
         pasanaku.setName(pasanakuDTO.getName());
         pasanaku.setDescription(pasanakuDTO.getDescription());
         pasanaku.setState(pasanakuDTO.getState());
+        pasanaku.setGameStarted(false);
         pasanaku.setUserId(null);
         pasanaku.setRuleId(savedRule);
         pasanaku.setDateId(savedDatePasanaku);
         return ResponseEntity.status(HttpStatus.CREATED).body(pasanakuRepository.save(pasanaku));
     }
+
+    //HU # GP-02 LISTAR PASANAKUS
+    @PostMapping("/pasanakus")
+    public ResponseEntity<?> getPasanakus() {
+        List<Pasanaku> result = pasanakuRepository.findAll();
+
+        if (result.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        } else {
+            List<PasanakuDTO> dtoList = result.stream().map(pasanakuDTOConverter::convertToDto)
+                    .collect(Collectors.toList());
+
+            return ResponseEntity.ok(dtoList);
+        }
+    }
+
+    //HU # GP-03 LISTAR BENEFICIARIOS
+//    @PostMapping("/beneficiaries")
+//    public ResponseEntity<?> getBeneficiaries(){
+//        List<Beneficiaries> result = beneficiariesRepository.findAll();
+//
+//        if (result.isEmpty()){
+//            return ResponseEntity.notFound().build();
+//        } else {
+//            return ResponseEntity.ok(result);
+//        }
+//    }
 
     //HU # GP-04 DAR DE BAJA PASANAKUS
     @PostMapping("/statepasanaku/{id}")
@@ -114,7 +111,7 @@ public class PasanakuController {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN)
                         .body("No se puede actualizar el estado. El pasanaku ya ha iniciado.");
             }
-        }).orElse(ResponseEntity.notFound().build()); // Manejar caso donde no se encuentra el Pasanaku
+        }).orElse(ResponseEntity.notFound().build());
     }
 
     //HU # GP-05 EDITAR PASANAKUS
@@ -146,4 +143,35 @@ public class PasanakuController {
         }).orElse(ResponseEntity.notFound().build());
     }
 
+
+    //HU # GP-07 INICIAR O CERRAR PASANAKU
+    @PostMapping("/startgame/{id}")
+    public ResponseEntity<String> startGame(@PathVariable Long id) {
+        return pasanakuRepository.findById(id).map(pasanaku -> {
+            pasanaku.setGameStarted(true);
+            pasanakuRepository.save(pasanaku);
+            return ResponseEntity.ok("Pasanaku Started Correctly");
+        }).orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping("/closegame/{id}")
+    public ResponseEntity<String> closeGame(@PathVariable Long id) {
+        return pasanakuRepository.findById(id).map(pasanaku -> {
+            pasanaku.setGameStarted(false);
+            pasanakuRepository.save(pasanaku);
+            return ResponseEntity.ok("Pasanaku Closed Correctly");
+        }).orElse(ResponseEntity.notFound().build());
+    }
+
+    //HU # GP-11 VISUALIZAR PASANAKU
+    @PostMapping("/pasanakus/{id}")
+    public ResponseEntity<?> getOnePasanaku(@PathVariable Long id) {
+        Pasanaku result = pasanakuRepository.findById(id).orElse(null);
+
+        if (result == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(result);
+        }
+    }
 }
