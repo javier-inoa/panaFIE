@@ -16,12 +16,14 @@ public class Rule {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "amount_of_people")
     private Integer amountOfPeople;
 
     private Float amount;
 
     private String duration;
 
+    @Column(name = "type_of_draw")
     private String typeOfDraw;
     
 }

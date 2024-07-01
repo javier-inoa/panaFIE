@@ -1,9 +1,12 @@
 package panafie.fie.model.calendar;
 
 import java.util.Date;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -18,16 +21,19 @@ import panafie.fie.model.user.User;
 public class Calendar {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "user_id")
     private User userId;
-    //foren key user
+    
     @NotNull
+    @Column(name = "payment_date") 
     private Date paymentDate;
 
     @NotNull
+    @Column(name = "maximum_payment_date") 
     private Date maximumPaymentDate;
 
     @NotNull

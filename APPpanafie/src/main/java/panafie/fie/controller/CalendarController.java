@@ -48,7 +48,7 @@ public class CalendarController {
 
     // Historia # GCO-01 - Visualización del calendario de pagos
     // Ver todos los calendarios
-    @GetMapping("/view")
+    @PostMapping("/view")
     public ResponseEntity<List<Calendar>> viewAllCalendars() {
         List<Calendar> calendars = calendarRepository.findAll();
         if (calendars.isEmpty()) {
@@ -59,7 +59,7 @@ public class CalendarController {
 
     // Historia # GCO-01 - Visualización del calendario de pagos
     // Ver detalles de un calendario
-    @GetMapping("/details/{id}")
+    @PostMapping("/details/{id}")
     public ResponseEntity<String> viewCalendarDetails(@PathVariable Long id) {
         Optional<Calendar> calendar = calendarRepository.findById(id);
         return calendar.map(cal -> ResponseEntity.ok("Detalles del calendario: Usuario: " +
@@ -69,7 +69,7 @@ public class CalendarController {
     }
 
     // Supervisar actividades de los jugadores
-    /*@GetMapping("/supervise")
+    /*@PostMapping("/supervise")
     public ResponseEntity<List<Calendar>> superviseActivities(@RequestParam String filter) {
         List<Calendar> calendars;
         switch (filter) {

@@ -9,7 +9,6 @@ import panafie.fie.model.user.User;
 import panafie.fie.repository.PaymentRepository;
 import panafie.fie.repository.UserRepository;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,7 +47,7 @@ public class PaymentController {
 
     // Historia # GCO-07 - Pago de cuota
     // Selección de cuenta
-    @GetMapping("/accounts/{userId}")
+    @PostMapping("/accounts/{userId}")
     public ResponseEntity<List<String>> getUserAccounts(@PathVariable Long userId) {
         Optional<User> user = userRepository.findById(userId);
         if (user.isPresent()) {
@@ -74,10 +73,10 @@ public class PaymentController {
         List<Pay> payments;
         switch (filter) {
             case "incomplete":
-                //payments = payRepository.findByIncompletePayments();
+                payments = payRepository.findByIncompletePayments();
                 break;
             case "overdue":
-                //payments = payRepository.findByDateBefore(new Date());
+                payments = payRepository.findByDateBefore(new Date());
                 break;
             case "all":
             default:

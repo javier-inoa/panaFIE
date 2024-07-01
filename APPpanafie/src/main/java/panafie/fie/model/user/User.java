@@ -1,9 +1,11 @@
 package panafie.fie.model.user;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Max;
@@ -27,6 +29,7 @@ public class User {
     
     @NotNull
     @ManyToOne
+    @JoinColumn(name = "role_id")
     private Role roleId;
     
     @NotNull
@@ -35,6 +38,7 @@ public class User {
     
     @NotNull
     @Size(max = 50)
+    @Column(name = "last_name")
     private String lastName;
     
     @NotNull
