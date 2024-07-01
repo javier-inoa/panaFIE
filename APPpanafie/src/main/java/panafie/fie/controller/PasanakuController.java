@@ -22,6 +22,9 @@ import panafie.fie.repository.DatePasanakuRepository;
 import panafie.fie.repository.PasanakuRepository;
 import panafie.fie.repository.RuleRepository;
 import panafie.fie.repository.UserRepository;
+//import panafie.fie.service.PdfService;
+//
+//import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @RequiredArgsConstructor
@@ -33,6 +36,7 @@ public class PasanakuController {
     private final DatePasanakuRepository datePasanakuRepository;
     private final RuleRepository rulesRepository;
     private final PasanakuDTOConverter pasanakuDTOConverter;
+//    private final PdfService pdfService;
 
     //HU # GP-01 CREAR PASANAKUS
     @PostMapping("/pasanaku")
@@ -174,4 +178,16 @@ public class PasanakuController {
             return ResponseEntity.ok(result);
         }
     }
+
+
+    //HU # R-01 REPORTE DE PASANAKUS
+//    @PostMapping("/reporte-pasanakus")
+//    public ResponseEntity<?> generarReportePasanakus(HttpServletResponse response) {
+//        try {
+//            pdfService.generatePasanakuReport(response);
+//            return ResponseEntity.ok().build();
+//        } catch (RuntimeException e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+//        }
+//    }
 }
