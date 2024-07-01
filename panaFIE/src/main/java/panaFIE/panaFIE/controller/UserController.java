@@ -17,9 +17,9 @@ public class UserController {
     private UserRepository callUser;
 
     @PostMapping("/login")
-    public ResponseEntity<?> findUser(@RequestBody Map<String, String> datos) {
-        String email = datos.get("email");
-        String password = datos.get("password");
+    public ResponseEntity<?> findUser(@RequestBody Map<String, String> data) {
+        String email = data.get("email");
+        String password = data.get("password");
 
         Optional<User> user = callUser.findByEmailAndPassword(email, password);
         if (user.isPresent()) {
