@@ -38,9 +38,9 @@ public class User {
     private String lastName;
     
     @NotNull
-    @Min(value = 0)//0 usuario dado de baja 1 ususario suspendido 2 usuario activo
-    @Max(value = 2)
-    private Integer state;
+    @Min(value = 1)
+    @Max(value = 3)
+    private Integer status;
     
     @NotNull
     @Email

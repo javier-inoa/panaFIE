@@ -43,7 +43,7 @@ public class CalendarController {
         calendarRepository.save(calendar);
 
         return ResponseEntity.ok("Fecha de pago programada exitosamente para el usuario: " +
-                user.getNombre() + " " + user.getApellido() + ", Monto: " + calendar.getAmount());
+                user.getName()+ " " + user.getLastName()+ ", Monto: " + calendar.getAmount());
     }
 
     // Historia # GCO-01 - Visualización del calendario de pagos
@@ -63,13 +63,13 @@ public class CalendarController {
     public ResponseEntity<String> viewCalendarDetails(@PathVariable Long id) {
         Optional<Calendar> calendar = calendarRepository.findById(id);
         return calendar.map(cal -> ResponseEntity.ok("Detalles del calendario: Usuario: " +
-                cal.getUserId().getNombre() + " " + cal.getUserId().getApellido() + ", Fecha de pago: " +
+                cal.getUserId().getName()+ " " + cal.getUserId().getLastName()+ ", Fecha de pago: " +
                 cal.getPaymentDate() + ", Monto: " + cal.getAmount()))
                 .orElseGet(() -> ResponseEntity.status(404).body("Calendario no encontrado."));
     }
 
     // Supervisar actividades de los jugadores
-    @GetMapping("/supervise")
+    /*@GetMapping("/supervise")
     public ResponseEntity<List<Calendar>> superviseActivities(@RequestParam String filter) {
         List<Calendar> calendars;
         switch (filter) {
@@ -88,5 +88,5 @@ public class CalendarController {
             return ResponseEntity.status(404).body(null);
         }
         return ResponseEntity.ok(calendars);
-    }
+    }*/
 }

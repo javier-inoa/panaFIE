@@ -43,7 +43,7 @@ public class PaymentController {
         payRepository.save(pay);
 
         return ResponseEntity.ok("El pago fue procesado correctamente para el usuario: " +
-                user.getNombre() + " " + user.getApellido() + ", Monto: " + pay.getAmount());
+                user.getName()+ " " + user.getLastName() + ", Monto: " + pay.getAmount());
     }
 
     // Historia # GCO-07 - Pago de cuota
@@ -69,15 +69,15 @@ public class PaymentController {
 
     // Historia # GCO-02 - Supervisación de actividades
     // Supervisar pagos de jugadores
-    @GetMapping("/supervise")
+    /*@GetMapping("/supervise")
     public ResponseEntity<List<Pay>> supervisePayments(@RequestParam String filter) {
         List<Pay> payments;
         switch (filter) {
             case "incomplete":
-                payments = payRepository.findByIncompletePayments();
+                //payments = payRepository.findByIncompletePayments();
                 break;
             case "overdue":
-                payments = payRepository.findByDateBefore(new Date());
+                //payments = payRepository.findByDateBefore(new Date());
                 break;
             case "all":
             default:
@@ -88,5 +88,5 @@ public class PaymentController {
             return ResponseEntity.status(404).body(null);
         }
         return ResponseEntity.ok(payments);
-    }
+    }*/
 }
