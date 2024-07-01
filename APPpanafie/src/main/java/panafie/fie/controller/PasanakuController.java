@@ -7,6 +7,12 @@ import java.util.Map;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import io.swagger.v3.oas.annotations.Operation;
+
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,7 +44,14 @@ public class PasanakuController {
     private final PasanakuDTOConverter pasanakuDTOConverter;
 //    private final PdfService pdfService;
 
-    //HU # GP-01 CREAR PASANAKUS
+    @Operation(summary = "HU # GP-01 CREAR PASANAKUS")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Se ha creado el Pasanaku correctamente",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Pasanaku.class))),
+            @ApiResponse(responseCode = "400", description = "Petición inválida: puede faltar información obligatoria en el cuerpo de la solicitud"),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor al procesar la solicitud")
+    })
     @PostMapping("/pasanaku")
     public ResponseEntity<?> createPasanaku(@RequestBody CreatePasanakuDTO pasanakuDTO) {
         DatePasanaku datePasanaku = new DatePasanaku();
@@ -64,7 +77,13 @@ public class PasanakuController {
         return ResponseEntity.status(HttpStatus.CREATED).body(pasanakuRepository.save(pasanaku));
     }
 
-    //HU # GP-02 LISTAR PASANAKUS
+    @Operation(summary = "HU # GP-02 LISTAR PASANAKUS")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lista de Pasanakus encontrados",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = PasanakuDTO.class)) }),
+            @ApiResponse(responseCode = "404", description = "No se encontraron Pasanakus")
+    })
     @PostMapping("/pasanakus")
     public ResponseEntity<?> getPasanakus() {
         List<Pasanaku> result = pasanakuRepository.findAll();
@@ -79,7 +98,11 @@ public class PasanakuController {
         }
     }
 
-    //HU # GP-03 LISTAR BENEFICIARIOS
+//    @Operation(summary = "HU # GP-03 LISTAR BENEFICIARIOS")
+//@ApiResponses(value = {
+//        @ApiResponse(responseCode = "200", description = "Lista de beneficiarios obtenida correctamente"),
+//        @ApiResponse(responseCode = "404", description = "No se encontraron beneficiarios")
+//})
 //    @PostMapping("/beneficiaries")
 //    public ResponseEntity<?> getBeneficiaries(){
 //        List<Beneficiaries> result = beneficiariesRepository.findAll();
@@ -91,7 +114,15 @@ public class PasanakuController {
 //        }
 //    }
 
-    //HU # GP-04 DAR DE BAJA PASANAKUS
+    @Operation(summary = "HU # GP-04 DAR DE BAJA PASANAKUS")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Estado del Pasanaku actualizado correctamente",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Pasanaku.class)) }),
+            @ApiResponse(responseCode = "400", description = "Parámetro 'state' requerido"),
+            @ApiResponse(responseCode = "403", description = "No se puede actualizar el estado. El Pasanaku ya ha iniciado"),
+            @ApiResponse(responseCode = "404", description = "Pasanaku no encontrado")
+    })
     @PostMapping("/statepasanaku/{id}")
     public ResponseEntity<?> updateStatePasanaku(@RequestBody Map<String, Boolean> requestBody, @PathVariable Long id) {
         Boolean state = requestBody.get("state");
@@ -118,7 +149,16 @@ public class PasanakuController {
         }).orElse(ResponseEntity.notFound().build());
     }
 
-    //HU # GP-05 EDITAR PASANAKUS
+
+
+    @Operation(summary = "HU # GP-05 EDITAR PASANAKUS")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Pasanaku actualizado correctamente",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Pasanaku.class)) }),
+            @ApiResponse(responseCode = "403", description = "No se puede actualizar el Pasanaku. Ya ha iniciado"),
+            @ApiResponse(responseCode = "404", description = "Pasanaku no encontrado")
+    })
     @PostMapping("/updatepasanaku/{id}")
     public ResponseEntity<?> updatePasanaku(@RequestBody CreatePasanakuDTO pasanakuDTO, @PathVariable Long id) {
         return pasanakuRepository.findById(id).map(existingPasanaku -> {
@@ -148,7 +188,13 @@ public class PasanakuController {
     }
 
 
-    //HU # GP-07 INICIAR O CERRAR PASANAKU
+    @Operation(summary = "HU # GP-07 INICIAR PASANAKU")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Pasanaku iniciado correctamente",
+                    content = { @Content(mediaType = "text/plain",
+                            schema = @Schema(implementation = String.class)) }),
+            @ApiResponse(responseCode = "404", description = "Pasanaku no encontrado")
+    })
     @PostMapping("/startgame/{id}")
     public ResponseEntity<String> startGame(@PathVariable Long id) {
         return pasanakuRepository.findById(id).map(pasanaku -> {
@@ -158,6 +204,14 @@ public class PasanakuController {
         }).orElse(ResponseEntity.notFound().build());
     }
 
+
+    @Operation(summary = "HU # GP-07 CERRAR PASANAKU")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Pasanaku cerrado correctamente",
+                    content = { @Content(mediaType = "text/plain",
+                            schema = @Schema(implementation = String.class)) }),
+            @ApiResponse(responseCode = "404", description = "Pasanaku no encontrado")
+    })
     @PostMapping("/closegame/{id}")
     public ResponseEntity<String> closeGame(@PathVariable Long id) {
         return pasanakuRepository.findById(id).map(pasanaku -> {
@@ -167,7 +221,14 @@ public class PasanakuController {
         }).orElse(ResponseEntity.notFound().build());
     }
 
-    //HU # GP-11 VISUALIZAR PASANAKU
+
+    @Operation(summary = "HU # GP-11 VISUALIZAR PASANAKU")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Pasanaku encontrado",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Pasanaku.class)) }),
+            @ApiResponse(responseCode = "404", description = "Pasanaku no encontrado")
+    })
     @PostMapping("/pasanakus/{id}")
     public ResponseEntity<?> getOnePasanaku(@PathVariable Long id) {
         Pasanaku result = pasanakuRepository.findById(id).orElse(null);
@@ -180,7 +241,7 @@ public class PasanakuController {
     }
 
 
-    //HU # R-01 REPORTE DE PASANAKUS
+//    @Operation(summary = "HU # R-01 REPORTE DE PASANAKUS")
 //    @PostMapping("/reporte-pasanakus")
 //    public ResponseEntity<?> generarReportePasanakus(HttpServletResponse response) {
 //        try {

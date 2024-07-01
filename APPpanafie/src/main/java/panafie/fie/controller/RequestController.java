@@ -4,14 +4,21 @@
  */
 package panafie.fie.controller;
 
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import io.swagger.v3.oas.annotations.Operation;
 
 import panafie.fie.dto.RequestDTO;
 import panafie.fie.model.pasanaku.Pasanaku;
@@ -34,6 +41,13 @@ public class RequestController {
     private final UserRepository userRepository;
     private final RequestRepository requestRepository;
 
+    @Operation(summary = "OBTENER LA LISTA DE REQUESTS")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lista de requests obtenida correctamente",
+                    content = { @Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = RequestDTO.class))) }),
+            @ApiResponse(responseCode = "404", description = "No se encontraron requests")
+    })
     @PostMapping("/getrequests")
     public ResponseEntity<List<RequestDTO>> getRequests() {
         List<Request> requests = requestRepository.findAll();
@@ -49,8 +63,12 @@ public class RequestController {
         }).collect(Collectors.toList());
         return ResponseEntity.ok(requestDTOs);
     }
-    
-    //HU # GP-06 GESTION DE SOLICITUDES
+
+    @Operation(summary = "HU # GP-06 GESTION DE SOLICITUDES - ACEPTAR")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Solicitud aceptada correctamente"),
+            @ApiResponse(responseCode = "404", description = "No se encontró la solicitud")
+    })
     @PostMapping("/acceptrequest")
     public ResponseEntity<String> acceptRequest(@RequestBody Map<String, Long> requestMap){
         Long requestId = requestMap.get("requestId");
@@ -63,6 +81,12 @@ public class RequestController {
         return ResponseEntity.status(HttpStatus.OK).body("Request accepted correctly");
     }
 
+
+    @Operation(summary = "HU # GP-06 GESTION DE SOLICITUDES - DENEGAR")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Solicitud denegada y eliminada correctamente"),
+            @ApiResponse(responseCode = "404", description = "No se encontró la solicitud")
+    })
     @PostMapping("/denyrequest")
     public ResponseEntity<?> denyRequest(@RequestBody Map<String, Long> requestMap){
         Long requestId = requestMap.get("requestId");
@@ -74,7 +98,12 @@ public class RequestController {
         return ResponseEntity.status(HttpStatus.OK).body("Request deleted successfully");
     }
 
-    //HU # GP-10 ENVIO DE SOLICITUD
+
+    @Operation(summary = "HU # GP-10 ENVIO DE SOLICITUD")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Solicitud enviada correctamente"),
+            @ApiResponse(responseCode = "404", description = "No se encontró el Pasanaku asociado a la solicitud")
+    })
     @PostMapping("/sendrequest")
     public ResponseEntity<?> sendRequestFromPlayer(@RequestBody RequestDTO requestDTO){
         Request request = new Request();
